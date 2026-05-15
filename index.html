@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>minios — A Minimal x86 Operating System</title>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span>mini</span>os</div>
+  <a href="#about">About</a>
+  <a href="#wiki">Wiki</a>
+  <a href="#apps">Apps</a>
+  <a href="#build">Build</a>
+  <div class="spacer"></div>
+  <a class="github-btn" href="https://github.com/yourusername/minios" target="_blank">GitHub</a>
+</nav>
+
+<section class="hero">
+  <h1>A <span>minimal</span> UNIX-like OS<br>for x86 from scratch</h1>
+  <p class="subtitle">Graphical window manager, TCP/IP stack, filesystem, Python runtime, C compiler, and 9 built-in apps — all in 32-bit protected mode.</p>
+  <div class="download-area">
+    <a href="#" class="btn btn-primary" onclick="alert('Download coming soon — build from source with `make`')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download .bin
+    </a>
+    <a href="#build" class="btn btn-secondary">Build from source</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="num">40+</div><div class="label">Commands</div></div>
+    <div class="stat"><div class="num">9</div><div class="label">Built-in Apps</div></div>
+    <div class="stat"><div class="num">12K</div><div class="label">Lines of C</div></div>
+    <div class="stat"><div class="num">3</div><div class="label">Language Runtimes</div></div>
+  </div>
+</section>
+
+<div id="about" class="section scroll-fade">
+  <h2>What is minios?</h2>
+  <p class="subh">A from-scratch operating system built for learning, hacking, and running inside QEMU.</p>
+  <div class="grid-3">
+    <div class="card">
+      <div class="icon">🖥️</div>
+      <h3>Graphical Shell</h3>
+      <p>Multi-window GUI with drag, resize, minimize, and a taskbar. Drag files between apps.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🌐</div>
+      <h3>Networking</h3>
+      <p>RTL8139 driver with custom TCP/IP stack — ARP, IP, TCP, DNS, and HTTP GET requests.</p>
+    </div>
+    <div class="card">
+      <div class="icon">📦</div>
+      <h3>Filesystem</h3>
+      <p>In-memory FS with 64 files, 32-char names, and persistent settings saved to disk.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🐍</div>
+      <h3>Language Runtimes</h3>
+      <p>Run Python scripts, compile C with TinyCC, or assemble x86 code — all on the OS itself.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🎮</div>
+      <h3>Apps & Games</h3>
+      <p>Paint, Snake, Calculator, Notepad, File Manager, Settings, and a web browser.</p>
+    </div>
+    <div class="card">
+      <div class="icon">🎨</div>
+      <h3>Pixel DE</h3>
+      <p>Full-screen desktop environment with 3D rotating cube, starfield, gradient background.</p>
+    </div>
+  </div>
+</div>
+
+<div id="wiki" class="section scroll-fade">
+  <h2>Quick Start Wiki</h2>
+  <p class="subh">Everything you need to build, run, and hack on minios.</p>
+
+  <h3 style="color:#fff;margin-top:40px;margin-bottom:16px;">📦 Prerequisites</h3>
+  <div class="build-box">
+<span class="comment"># macOS</span>
+brew install i686-elf-gcc nasm qemu
+
+<span class="comment"># Ubuntu/Debian</span>
+apt install build-essential nasm qemu-system-x86
+<span class="comment"># Install i686-elf-gcc from https://github.com/lordmilko/i686-elf-tools</span>
+  </div>
+
+  <h3 style="color:#fff;margin-top:32px;margin-bottom:16px;">🔨 Build</h3>
+  <div class="build-box">
+git clone https://github.com/yourusername/minios.git
+<span class="cmd">cd minios</span>
+<span class="cmd">make</span>
+  </div>
+
+  <h3 style="color:#fff;margin-top:32px;margin-bottom:16px;">▶️ Run</h3>
+  <div class="build-box">
+<span class="comment"># Basic — boots to GUI terminal</span>
+qemu-system-i386 -kernel minios.bin -m 64 -vga std -nic user,model=rtl8139
+
+<span class="comment"># With disk image for persistent filesystem</span>
+qemu-system-i386 -kernel minios.bin -m 64 -vga std \
+  -nic user,model=rtl8139 -drive file=disk.img,format=raw,if=ide
+
+<span class="comment"># Boot from ISO (GRUB)</span>
+mkdir -p iso/boot/grub
+cp minios.bin iso/boot/
+echo 'menuentry "minios" { multiboot /boot/minios.bin }' > iso/boot/grub/grub.cfg
+grub-mkrescue -o minios.iso iso
+qemu-system-i386 -cdrom minios.iso -m 64 -vga std
+  </div>
+
+  <h3 style="color:#fff;margin-top:32px;margin-bottom:16px;">⌨️ Shell Commands</h3>
+  <p style="color:#6a7f9b;font-size:.9rem;margin-bottom:16px;">Over 40 built-in commands with history (up/down arrow), mid-line editing (left/right, Home, End, Del), and tab completion.</p>
+  <ul class="cmd-list">
+    <li>help</li><li>echo</li><li>clear</li><li>ls</li><li>cat</li><li>date</li><li>uname</li><li>whoami</li><li>uptime</li><li>ps</li><li>meminfo</li><li>neofetch</li><li>calc</li><li>edit</li><li>rm</li><li>mv</li><li>head</li><li>hexdump</li><li>wc</li><li>cal</li><li>seq</li><li>expr</li><li>which</li><li>touch</li><li>sleep</li><li>yes</li><li>rev</li><li>uniq</li><li>sort</li><li>hostname</li><li>window</li><li>paint</li><li>snake</li><li>browser</li><li>settings</li><li>files</li><li>notepad</li><li>python</li><li>tcc</li><li>apt</li><li>shutdown</li><li>reboot</li>
+  </ul>
+
+  <h3 style="color:#fff;margin-top:40px;margin-bottom:16px;">🏗️ Architecture</h3>
+  <div class="arch-box">
+┌─────────────────────────────┐
+│    <span class="hl">GUI Window Manager</span>         │
+│  9 apps, taskbar, drag &amp; drop  │
+├─────────────────────────────┤
+│    <span class="hl">Shell + Commands</span>           │
+│  40+ commands, history, tab  │
+├─────────────────────────────┤
+│    <span class="hl2">Language Runtimes</span>           │
+│  Python, TinyCC, Assembler   │
+├─────────────────────────────┤
+│    <span class="hl2">TCP/IP Stack</span>                │
+│  ARP · IP · TCP · DNS · HTTP │
+├─────────────────────────────┤
+│    <span class="hl2">RTL8139 NIC Driver</span>           │
+├─────────────────────────────┤
+│    <span class="hl">In-Memory Filesystem</span>         │
+│  64 files · 4KB each · 64KB  │
+├─────────────────────────────┤
+│    <span class="hl2">Hardware Drivers</span>             │
+│  VGA · Framebuffer · Keyboard│
+│  Mouse · RTC · Serial · PCI  │
+├─────────────────────────────┤
+│    <span class="hl">x86 Protected Mode</span>           │
+│  Multiboot · IDT · Port I/O  │
+└─────────────────────────────┘
+  </div>
+
+  <h3 style="color:#fff;margin-top:40px;margin-bottom:16px;">⚙️ Configuration</h3>
+  <p style="color:#6a7f9b;font-size:.9rem;margin-bottom:16px;">Settings are persisted to <code style="background:#1a2332;padding:2px 6px;border-radius:4px;color:#c8d0e0;">/settings.cfg</code> in the filesystem. Adjust via the Settings app or edit the file directly.</p>
+  <div class="build-box">
+mouse_icon=0    <span class="comment"># 0=Crosshair, 1=Arrow, 2=Hand</span>
+bg_color=3357993 <span class="comment"># RGB hex as decimal (0x335799 = 3368569)</span>
+bg_pattern=0    <span class="comment"># 0=Checkerboard, 1=Solid, 2=Stripes</span>
+boot_anim=1     <span class="comment"># 0=skip, 1=show boot animation</span>
+anim_spd=2      <span class="comment"># 1=slow, 2=medium, 3=fast</span>
+desktop_env=0   <span class="comment"># 0=Default DE, 1=Pixel DE</span>
+  </div>
+</div>
+
+<div id="apps" class="section scroll-fade">
+  <h2>Built-in Applications</h2>
+  <p class="subh">Every app ships with the kernel — no installation needed.</p>
+  <table class="app-table">
+    <tr><th>App</th><th>Description</th><th>Launch</th></tr>
+    <tr><td>Terminal</td><td>Shell with scrollback, history, tab completion</td><td><code>window</code></td></tr>
+    <tr><td>Paint</td><td>Drawing canvas, <kbd>C</kbd> to clear</td><td><code>paint</code></td></tr>
+    <tr><td>Snake</td><td>Classic game, live score in title bar</td><td><code>snake</code></td></tr>
+    <tr><td>Browser</td><td>Basic web browser (HTTP via TCP/IP stack)</td><td><code>browser</code></td></tr>
+    <tr><td>Settings</td><td>System settings GUI</td><td><code>settings</code></td></tr>
+    <tr><td>Files</td><td>File manager with drag &amp; drop</td><td><code>files</code></td></tr>
+    <tr><td>Calculator</td><td>RPN calculator with keyboard input</td><td><code>calc</code></td></tr>
+    <tr><td>Notepad</td><td>Text editor with line numbers &amp; syntax highlighting</td><td><code>notepad</code> or <code>edit &lt;file&gt;</code></td></tr>
+    <tr><td>Winver</td><td>About screen</td><td><code>winver</code></td></tr>
+  </table>
+
+  <h3 style="color:#fff;margin-top:40px;margin-bottom:16px;">📁 Project Structure</h3>
+  <div class="build-box" style="font-size:.78rem;">
+boot.asm           <span class="comment"># Multiboot header + entry point (NASM)</span>
+link.ld            <span class="comment"># Linker script</span>
+Makefile           <span class="comment"># Build system</span>
+kernel.c           <span class="comment"># Main kernel: shell, commands, main loop</span>
+vga.c / vga.h      <span class="comment"># VGA text-mode driver (80×25)</span>
+keyboard.c / .h    <span class="comment"># PS/2 keyboard driver</span>
+mouse.c / .h       <span class="comment"># PS/2 mouse driver</span>
+serial.c / .h      <span class="comment"># Serial port (COM1) driver</span>
+ports.h            <span class="comment"># x86 I/O port utilities</span>
+framebuffer.c / .h <span class="comment"># VESA framebuffer (800×600×32)</span>
+rtc.c / .h         <span class="comment"># CMOS RTC driver</span>
+gui.c / gui.h      <span class="comment"># Window manager + terminal emulator</span>
+gles.c / gles.h    <span class="comment"># Software GLES renderer</span>
+de_pixel.c / .h    <span class="comment"># Pixel Desktop Environment</span>
+fs.c / fs.h        <span class="comment"># In-memory filesystem</span>
+rtl8139.c / .h     <span class="comment"># RTL8139 NIC driver</span>
+net.c / net.h      <span class="comment"># TCP/IP stack</span>
+settings_store.c   <span class="comment"># Persistent settings</span>
+calcapp.c / .h     <span class="comment"># GUI calculator</span>
+notepad.c / .h     <span class="comment"># GUI text editor</span>
+paint.c / .h       <span class="comment"># Drawing application</span>
+snake.c / .h       <span class="comment"># Snake game</span>
+browser.c / .h     <span class="comment"># Web browser</span>
+files.c / .h       <span class="comment"># File manager</span>
+settings.c / .h    <span class="comment"># Settings panel</span>
+winver.c / .h      <span class="comment"># About screen</span>
+pylang.c / .h      <span class="comment"># Python interpreter</span>
+tinycc.c / .h      <span class="comment"># C compiler</span>
+asm.c / .h         <span class="comment"># Assembler</span>
+apt.c / .h         <span class="comment"># Package manager</span>
+  </div>
+</div>
+
+<div id="build" class="section scroll-fade">
+  <h2>Build &amp; Contribute</h2>
+  <p class="subh">The entire OS is ~12,000 lines of C and NASM. Fork it, hack it, break it.</p>
+  <div class="grid-3">
+    <div class="card">
+      <div class="icon">📋</div>
+      <h3>Requirements</h3>
+      <p><code>i686-elf-gcc</code>, <code>nasm</code>, <code>make</code>, <code>qemu-system-i386</code></p>
+    </div>
+    <div class="card">
+      <div class="icon">🔧</div>
+      <h3>Build</h3>
+      <p><code>git clone &amp;&amp; cd minios &amp;&amp; make</code></p>
+    </div>
+    <div class="card">
+      <div class="icon">🐛</div>
+      <h3>Test</h3>
+      <p><code>qemu-system-i386 -kernel minios.bin -m 64 -vga std -nic user,model=rtl8139</code></p>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:48px;">
+    <a class="btn btn-primary" href="#">Download minios.bin</a>
+    <a class="btn btn-secondary" href="https://github.com/yourusername/minios" style="margin-left:12px;" target="_blank">View on GitHub →</a>
+  </div>
+</div>
+
+<footer>
+  minios · Built from scratch with C and NASM ·
+  <a href="https://github.com/yourusername/minios">GitHub</a>
+</footer>
+
+<script>
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: .1 });
+document.querySelectorAll('.scroll-fade').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
